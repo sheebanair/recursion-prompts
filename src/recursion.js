@@ -126,6 +126,15 @@ var reverse = function(string) {
 
 // 10. Write a function that determines if a string is a palindrome.
 var palindrome = function(string) {
+  string = string.toLowerCase().replace(/ /g, '');
+
+  if(string.length <= 1){
+    return true;
+  } else if(string[0] === string[string.length - 1]) {
+    return palindrome(string.substring(1, string.length - 1))
+  } else {
+    return false;
+  }
 };
 
 // 11. Write a function that returns the remainder of x divided by y without using the
@@ -134,16 +143,59 @@ var palindrome = function(string) {
 // modulo(17,5) // 2
 // modulo(22,6) // 4
 var modulo = function(x, y) {
+
+  if (y === 0) {
+    return NaN;
+  } else if (x === 0) {
+  	return 0;
+  } else if (x < 0) {
+  	return -modulo(-x, y);
+  } else if (y < 0) {
+  	return modulo(x, -y);
+  } else if (x >= y) {
+  	return modulo(x - y, y);
+  } else {
+  	return x;
+  }
+
 };
 
 // 12. Write a function that multiplies two numbers without using the * operator or
 // Math methods.
 var multiply = function(x, y) {
+  if(x === 0 || y === 0){
+    return 0;
+  } else if (x < 0 && y > 0) {
+    return -multiply(-x, y);
+  } else if (x > 0 && y < 0) {
+		return -multiply(x, -y);
+	} else if (x < 0 && y < 0) {
+		return multiply(-x, -y);
+	} else if (y > 1) {
+		return x + multiply(x, y - 1)
+	} else {
+		return x;
+	}
 };
 
 // 13. Write a function that divides two numbers without using the / operator or
 // Math methods to arrive at an approximate quotient (ignore decimal endings).
 var divide = function(x, y) {
+  if (y === 0) {
+    return NaN;
+  } else if (x === 0) {
+    return 0;
+  } else if (x < 0 && y > 0) {
+		return -divide(-x, y);
+	} else if (x > 0 && y < 0) {
+		return -divide(x, -y);
+	} else if (x < 0 && y < 0) {
+		return divide(-x, -y);
+	} else if (x >= y) {
+		return 1 + divide(x - y, y);
+	} else {
+		return 0;
+	}
 };
 
 // 14. Find the greatest common divisor (gcd) of two positive numbers. The GCD of two
@@ -152,6 +204,17 @@ var divide = function(x, y) {
 // http://www.cse.wustl.edu/~kjg/cse131/Notes/Recursion/recursion.html
 // https://www.khanacademy.org/computing/computer-science/cryptography/modarithmetic/a/the-euclidean-algorithm
 var gcd = function(x, y) {
+  if(x === 0) {
+    return y;
+  } else if (y === 0) {
+    return x;
+  } else if (x < 0 || y < 0) {
+    return null;
+  } else if (x > y) {
+    return gcd(x - y, y);
+  } else {
+    return gcd(x, y - x);
+  }
 };
 
 // 15. Write a function that compares each character of two strings and returns true if
@@ -159,21 +222,47 @@ var gcd = function(x, y) {
 // compareStr('house', 'houses') // false
 // compareStr('tomato', 'tomato') // true
 var compareStr = function(str1, str2) {
+  if(str1.length === str2.length) {
+    return true;
+  }
+  if(str1[0] === str2[0]){
+    return compareStr(str1.substring(1), str2.substring(1));
+  } else {
+    return false;
+  }
 };
 
 // 16. Write a function that accepts a string and creates an array where each letter
 // occupies an index of the array.
 var createArray = function(str) {
+
+  if(str.length === 1) {
+    return [str[0]];
+  } else {
+    return [str[0]].concat(createArray(str.substring(1)));
+  }
+
 };
 
 // 17. Reverse the order of an array
 var reverseArr = function(array) {
+  if(array.length === 0) {
+    return [];
+  } else {
+    return [array[array.length - 1]].concat(reverseArr(array.slice(0, array.length - 1)));
+  }
+
 };
 
 // 18. Create a new array with a given value and length.
 // buildList(0,5) // [0,0,0,0,0]
 // buildList(7,3) // [7,7,7]
 var buildList = function(value, length) {
+  if (length === 0){
+    return [];
+  } else {
+    return [value].concat(buildList(value, length - 1));
+  }
 };
 
 // 19. Implement FizzBuzz. Given integer n, return an array of the string representations of 1 to n.
@@ -182,17 +271,45 @@ var buildList = function(value, length) {
 // For numbers which are multiples of both three and five, output “FizzBuzz” instead of the number.
 // fizzBuzz(5) // ['1','2','Fizz','4','Buzz']
 var fizzBuzz = function(n) {
+  var item;
+  if(n === 0){
+    return [];
+  } else if(n  % 15 === 0) {
+    item = 'FizzBuzz';
+  } else if(n % 3 === 0) {
+    item = 'Fizz';
+  } else if(n % 5 === 0) {
+    item = 'Buzz';
+  } else {
+    item = n.toString();
+  }
+  return fizzBuzz(n-1).concat([item]);
 };
 
 // 20. Count the occurence of a value in a list.
 // countOccurrence([2,7,4,4,1,4], 4) // 3
 // countOccurrence([2,'banana',4,4,1,'banana'], 'banana') // 2
 var countOccurrence = function(array, value) {
+
+  if(array.length === 0) {
+    return 0;
+  }
+  if(array[0] === value){
+    return 1 + countOccurrence(array.slice(1), value);
+  } else {
+    return countOccurrence(array.slice(1), value);
+  }
 };
 
 // 21. Write a recursive version of map.
 // rMap([1,2,3], timesTwo); // [2,4,6]
 var rMap = function(array, callback) {
+  if(array.length === 0) {
+    return [];
+  } else {
+    return [callback(array[0])].concat(rMap(array.slice(1), callback));
+  }
+
 };
 
 // 22. Write a function that counts the number of times a key occurs in an object.
@@ -200,6 +317,15 @@ var rMap = function(array, callback) {
 // countKeysInObj(obj, 'r') // 1
 // countKeysInObj(obj, 'e') // 2
 var countKeysInObj = function(obj, key) {
+  var count = 0;
+  for(var item in obj) {
+    if(item === key) {
+      count++;
+    } else if(typeof obj[item] === 'object') {
+      count += countKeysInObj(obj[item], key);
+    }
+  }
+  return count;
 };
 
 // 23. Write a function that counts the number of times a value occurs in an object.
@@ -207,11 +333,29 @@ var countKeysInObj = function(obj, key) {
 // countValuesInObj(obj, 'r') // 2
 // countValuesInObj(obj, 'e') // 1
 var countValuesInObj = function(obj, value) {
+  var count = 0;
+  for(var key in obj) {
+    if(obj[key] === value) {
+      count++;
+    } else if(typeof obj[key] === 'object') {
+      count += countValuesInObj(obj[key], value);
+    }
+  }
+  return count;
 };
 
 // 24. Find all keys in an object (and nested objects) by a provided name and rename
 // them to a provided new name while preserving the value stored at that key.
 var replaceKeysInObj = function(obj, oldKey, newKey) {
+  for(var key in obj) {
+    if(key === oldKey) {
+      obj[newKey] = obj[oldKey];
+      delete obj[oldKey];
+    } else if(typeof obj[key] === 'object') {
+      replaceKeysInObj(obj[key], oldKey, newKey);
+    }
+  }
+  return obj;
 };
 
 // 25. Get the first n Fibonacci numbers. In the Fibonacci sequence, each subsequent
@@ -220,6 +364,14 @@ var replaceKeysInObj = function(obj, oldKey, newKey) {
 // fibonacci(5); // [0,1,1,2,3,5]
 // Note: The 0 is not counted.
 var fibonacci = function(n) {
+  if(n <= 0) {
+    return null;
+  } else if (n === 1) {
+    return [0, 1];
+  }
+  var arr = fibonacci(n - 1);
+  arr.push(arr[arr.length - 1] + arr[arr.length - 2]);
+  return arr;
 };
 
 // 26. Return the Fibonacci number located at index n of the Fibonacci sequence.
@@ -228,17 +380,39 @@ var fibonacci = function(n) {
 // nthFibo(7); // 13
 // nthFibo(3); // 2
 var nthFibo = function(n) {
+  if (n < 0) {
+		return null;
+	} else if (n === 0) {
+		return 0;
+	} else if (n === 1 || n === 2) {
+		return 1;
+	} else {
+		return nthFibo(n - 1) + nthFibo(n - 2);
+	}
 };
 
 // 27. Given an array of words, return a new array containing each word capitalized.
 // var words = ['i', 'am', 'learning', 'recursion'];
 // capitalizedWords(words); // ['I', 'AM', 'LEARNING', 'RECURSION']
 var capitalizeWords = function(array) {
+
+  if(array.length === 0){
+    return [];
+  } else {
+    return [array[0].toUpperCase()].concat(capitalizeWords(array.slice(1)));
+  }
 };
 
 // 28. Given an array of strings, capitalize the first letter of each index.
 // capitalizeFirst(['car','poop','banana']); // ['Car','Poop','Banana']
 var capitalizeFirst = function(array) {
+  if(array.length === 0){
+    return [];
+  } else {
+    var word = array[0];
+    var capitalized = word[0].toUpperCase() + word.substring(1);
+    return [capitalized].concat(capitalizeFirst(array.slice(1)));
+  }
 };
 
 // 29. Return the sum of all even numbers in an object containing nested objects.
@@ -251,11 +425,32 @@ var capitalizeFirst = function(array) {
 // };
 // nestedEvenSum(obj1); // 10
 var nestedEvenSum = function(obj) {
+  var sum = 0;
+
+  for(var key in obj) {
+    if(obj[key] % 2 === 0) {
+      sum += obj[key];
+    } else if(typeof obj[key] === 'object'){
+      sum += nestedEvenSum(obj[key]);
+    }
+  }
+  return sum;
 };
 
 // 30. Flatten an array containing nested arrays.
 // flatten([1,[2],[3,[[4]]],5]); // [1,2,3,4,5]
 var flatten = function(array) {
+  var result = [];
+
+  if(!Array.isArray(array)) {
+    return array;
+  }
+
+  array.forEach(function(item) {
+    result = result.concat(flatten(item));
+  })
+
+  return result;
 };
 
 // 31. Given a string, return an object containing tallies of each letter.
